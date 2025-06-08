@@ -52,7 +52,7 @@ public class PersonRepository implements AutoCloseable {
         preparedStatement.execute();
     }
 
-    public List<Person> findAll() throws SQLException, PersonValidationException {
+    public List<Person> findAll() throws SQLException {
         List<Person> personList = new ArrayList<>();
         connection = ConnectionProvider.getConnectionProvider().getConnection();
         preparedStatement = connection.prepareStatement("select * from persons");
@@ -63,7 +63,7 @@ public class PersonRepository implements AutoCloseable {
         return personList;
     }
 
-    public Person findById(int id) throws SQLException, PersonValidationException {
+    public Person findById(int id) throws SQLException {
         Person person = null;
         connection = ConnectionProvider.getConnectionProvider().getConnection();
         preparedStatement = connection.prepareStatement("select * from persons where id=?");
@@ -75,7 +75,7 @@ public class PersonRepository implements AutoCloseable {
         return person;
     }
 
-    public List<Person> findByNameAndFamily(String name, String family) throws SQLException, PersonValidationException {
+    public List<Person> findByNameAndFamily(String name, String family) throws SQLException {
         List<Person> personList = new ArrayList<>();
         connection = ConnectionProvider.getConnectionProvider().getConnection();
         preparedStatement = connection.prepareStatement("select * from persons where name like ? and family like ?");
