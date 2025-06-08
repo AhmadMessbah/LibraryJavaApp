@@ -15,7 +15,7 @@ public class EntityMapper {
                 .name(resultSet.getString("NAME"))
                 .family(resultSet.getString("FAMILY"))
                 .nationalId(resultSet.getString("NATIONAL_ID"))
-                .birthDate(resultSet.getDate("BIRTH_DATE").toLocalDate())
+                .birthDate(resultSet.getDate("BIRTH_DATE") == null ? null : resultSet.getDate("BIRTH_DATE").toLocalDate())
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class EntityMapper {
                         .name(resultSet.getString("PERSON_NAME"))
                         .family(resultSet.getString("PERSON_FAMILY"))
                         .nationalId(resultSet.getString("PERSON_NATIONAL_ID"))
-                        .birthDate(resultSet.getDate("PERSON_BIRTH_DATE").toLocalDate())
+                        .birthDate(resultSet.getDate("PERSON_BIRTH_DATE") == null ? null : resultSet.getDate("PERSON_BIRTH_DATE").toLocalDate())
                         .build();
 
         Book book = Book
@@ -53,8 +53,12 @@ public class EntityMapper {
                 .id(resultSet.getInt("LOAN_ID"))
                 .person(person)
                 .book(book)
-                .loanDate(resultSet.getDate("LOAN_DATE").toLocalDate())
-                .returnDate(resultSet.getDate("RETURN_DATE").toLocalDate())
+                .loanDate(
+                        resultSet.getDate("LOAN_DATE") == null ? null :resultSet.getDate("LOAN_DATE").toLocalDate()
+                )
+                .returnDate(
+                        resultSet.getDate("RETURN_DATE") == null ? null : resultSet.getDate("RETURN_DATE").toLocalDate()
+                )
                 .build();
     }
 }

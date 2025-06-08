@@ -28,7 +28,7 @@ public class PersonRepository implements AutoCloseable {
         preparedStatement.setString(2, person.getName());
         preparedStatement.setString(3, person.getFamily());
         preparedStatement.setString(4, person.getNationalId());
-        preparedStatement.setDate(5, Date.valueOf(person.getBirthDate()));
+        preparedStatement.setDate(5, person.getBirthDate() == null? null:Date.valueOf(person.getBirthDate()));
         preparedStatement.execute();
     }
 
@@ -39,7 +39,7 @@ public class PersonRepository implements AutoCloseable {
         preparedStatement.setString(1, person.getName());
         preparedStatement.setString(2, person.getFamily());
         preparedStatement.setString(3, person.getNationalId());
-        preparedStatement.setDate(4, Date.valueOf(person.getBirthDate()));
+        preparedStatement.setDate(4, person.getBirthDate() == null? null:Date.valueOf(person.getBirthDate()));
         preparedStatement.setInt(5, person.getId());
         preparedStatement.execute();
     }

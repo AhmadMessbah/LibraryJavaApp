@@ -18,6 +18,12 @@ public class LoanService {
         }
     }
 
+    public static void returnLoan(int id) throws Exception {
+        try (LoanRepository loanRepository = new LoanRepository()) {
+            loanRepository.returnLoan(id);
+        }
+    }
+
     public static void delete(int id) throws Exception {
         try (LoanRepository loanRepository = new LoanRepository()) {
             loanRepository.delete(id);

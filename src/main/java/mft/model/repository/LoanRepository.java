@@ -22,12 +22,10 @@ public class LoanRepository implements AutoCloseable {
         resultSet.next();
         loan.setId(resultSet.getInt("nextval"));
 
-        preparedStatement = connection.prepareStatement("insert into loans values (?, ?, ?, ?, ?)");
+        preparedStatement = connection.prepareStatement("insert into loans (id, person_id, book_id)values (?, ?, ?)");
         preparedStatement.setInt(1, loan.getId());
         preparedStatement.setInt(2, loan.getPerson().getId());
         preparedStatement.setInt(3, loan.getBook().getId());
-        preparedStatement.setDate(4, Date.valueOf(loan.getLoanDate()));
-        preparedStatement.setDate(5, Date.valueOf(loan.getReturnDate()));
         preparedStatement.execute();
     }
 
@@ -37,9 +35,17 @@ public class LoanRepository implements AutoCloseable {
         );
         preparedStatement.setInt(1, loan.getPerson().getId());
         preparedStatement.setInt(2, loan.getBook().getId());
-        preparedStatement.setDate(3, Date.valueOf(loan.getLoanDate()));
-        preparedStatement.setDate(4, Date.valueOf(loan.getReturnDate()));
+        preparedStatement.setDate(3, loan.getLoanDate() == null? null: Date.valueOf(loan.getLoanDate()));
+        preparedStatement.setDate(4, loan.getReturnDate() == null? null:Date.valueOf(loan.getReturnDate()));
         preparedStatement.setInt(5, loan.getId());
+        preparedStatement.execute();
+    }
+
+    public void returnLoan(int id) throws SQLException {
+        preparedStatement = connection.prepareStatement(
+                "update loans set return_date=sysdate where id=?"
+        );
+        preparedStatement.setInt(1, id);
         preparedStatement.execute();
     }
 
@@ -54,7 +60,7 @@ public class LoanRepository implements AutoCloseable {
     public List<Loan> findAll() throws SQLException {
         List<Loan> loanList = new ArrayList<>();
         connection = ConnectionProvider.getConnectionProvider().getConnection();
-        preparedStatement = connection.prepareStatement("select * from loans");
+        preparedStatement = connection.prepareStatement("select * from loan_report");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             loanList.add(EntityMapper.loanMapper(resultSet));
@@ -65,7 +71,7 @@ public class LoanRepository implements AutoCloseable {
     public Loan findById(int id) throws SQLException {
         Loan loan = null;
         connection = ConnectionProvider.getConnectionProvider().getConnection();
-        preparedStatement = connection.prepareStatement("select * from loans where id=?");
+        preparedStatement = connection.prepareStatement("select * from loan_report where loan_id=?");
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
@@ -104,7 +110,7 @@ public class LoanRepository implements AutoCloseable {
     public List<Loan> findNotReturnedLoans() throws SQLException {
         List<Loan> loanList = new ArrayList<>();
         connection = ConnectionProvider.getConnectionProvider().getConnection();
-        preparedStatement = connection.prepareStatement("select * from loans where return_date is null");
+        preparedStatement = connection.prepareStatement("select * from loan_report where return_date is null");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             loanList.add(EntityMapper.loanMapper(resultSet));
